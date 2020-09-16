@@ -1,0 +1,53 @@
+#!/bin/bash 
+
+# snake: convert filenames to snake case
+
+progname=$(basename "$0")
+
+while [ "$#" -gt 0 ] ; do
+
+    filename=$(basename "$1")
+    directory=$(dirname "$1")
+
+    if [ ! \( -f "$filename" \) ]; then
+        echo "$progname: '$filename' doesn't exist or is not a file." 1>&2
+        exit 1
+    fi
+
+    if [ ! \( -w "$filename" \) ]; then
+        echo "$progname: directory '$directory' has no write permission." 1>&2
+    fi
+
+    filename_no_ext="${filename%.*}"
+    ext="${filename##*.}"
+    
+    if [ "$filename_no_ext" = "$ext" ] ; then
+        ext=
+    else
+        ext=".$ext"
+    fi
+
+    new_filename_no_ext=$(tr '()_\ ,.' '-' <<< "$filename_no_ext")
+    new_filename_no_ext=$(sed 's/\([[:lower:]]\)\([[:upper:]]\)/\1-\2/g' <<< "$new_filename_no_ext")
+    new_filename_no_ext=$(sed 's/^-//' <<< "$new_filename_no_ext")
+    new_filename_no_ext=$(sed 's/-$//' <<< "$new_filename_no_ext")
+    new_filename_no_ext=$(sed 's/'"'"'//' <<< "$new_filename_no_ext")
+    new_filename_no_ext="${new_filename_no_ext,,}"
+    new_filename_no_ext=$(sed 's/-\+/-/g' <<< "$new_filename_no_ext")
+    new_filename_no_ext=$(iconv -f utf8 -t ascii//TRANSLIT <<< "$new_filename_no_ext")
+
+    new_filename="${new_filename_no_ext}${ext}"
+
+    if [ "$filename" -ef "$new_filename" ] ; then
+        echo "'$filename' won't be renamed."
+    else
+        echo "'$filename' will be renamed to '$new_filename'."
+        mv "$filename" "$new_filename"
+    fi
+
+    shift
+
+done
+
+echo -e "\n\nDone!"
+exit 0
