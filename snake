@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 
 # snake: convert filenames to snake case
 
@@ -20,7 +20,7 @@ while [ "$#" -gt 0 ] ; do
 
     filename_no_ext="${filename%.*}"
     ext="${filename##*.}"
-    
+
     if [ "$filename_no_ext" = "$ext" ] ; then
         ext=
     else
@@ -49,5 +49,5 @@ while [ "$#" -gt 0 ] ; do
 
 done
 
-echo -e "\n\nDone!"
+echo -e "\nDone!"
 exit 0
