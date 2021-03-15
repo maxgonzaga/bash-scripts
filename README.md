@@ -22,4 +22,4 @@ This scripts performs the following actions on each file it is given:
 
     ./geminus.sh <file1> <file2> <outfile>
 
-Remove words found in \<file2\> from \<file1\> and save output to \<outfile\>.
+Remove words found in `file2` from `file1` and save output to `outfile`.
